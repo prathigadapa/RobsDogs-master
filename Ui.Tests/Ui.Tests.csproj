@@ -99,8 +99,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\RobsDogsControllerTest.cs" />
+    <Compile Include="Data\DogOwnerRepositoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
+    <Compile Include="Services\DogOwnerServiceTest.cs" />
+    <Compile Include="ViewModelMappers\DogOwnerViewModelMapperTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

@@ -12,91 +12,59 @@ using System.Linq;
 
 namespace Ui.Tests.Controllers
 {
-	[TestClass]
-	public class RobsDogsControllerTest
-	{
-		private readonly RobsDogsController _rdc;
+    [TestClass]
+    public class RobsDogsControllerTest
+    {
 
-		private readonly Mock<IDogOwnerViewModelMapper> mockViewModelWrapper = new Mock<IDogOwnerViewModelMapper>();
-		private readonly Mock<IDogOwnerService> mockDogOwnerService = new Mock<IDogOwnerService>();
-		private readonly Mock<IDogOwnerRepository> mockDogsOwnerRepo = new Mock<IDogOwnerRepository>();
 
-		public RobsDogsControllerTest()
-		{
-			_rdc = new RobsDogsController(mockViewModelWrapper.Object);
-		}
+        private readonly Mock<IDogOwnerViewModelMapper> mockViewModelMapper = new Mock<IDogOwnerViewModelMapper>();
+        
+     
 
-		[TestMethod]
-		public void RobsDogsController_Index_GetAllDogOwners_Test()
-		{
 
-			// Arrange
+        [TestMethod]
+        public void GetAllDogOwners_Should_Get_DogOwnerViewModel_From_DogOwnerViewModelMapper_And_Return_Index_View()
+        {
 
-			var ownerName = "Rob";
-				var	dogNames = new List<string>() { "Willow", "Nook", "Sox" }
-				
-	
-			List<DogOwnerViewModel> testDogOwnerViewModels = new List<DogOwnerViewModel>()
-			{
-				new DogOwnerViewModel(){DogNames=dogNames,OwnerName =ownerName}
-			}
-			DogOwnerListViewModel testviewModel = new DogOwnerListViewModel() {
-				DogOwnerViewModels = testDogOwnerViewModels
-			};
-			mockViewModelWrapper.Setup(x => x.GetAllDogOwners()).Returns(testviewModel);
+            // Arrange
 
-			var mockContext = new Mock<ControllerContext>();
-			RobsDogsController controller = new RobsDogsController();
+            string ownerName = "Rob";
+            var dogNames = new List<string>() { "Willow", "Nook", "Sox" };
 
-			var controller = new RobsDogsController(mockViewModelWrapper.Object)
-			{
-				ControllerContext = mockContext.Object
-			};
 
-			// act
-			var result = controller.Index as ViewResult;
-			var resultData = (DogOwnerListViewModel)result.ViewData.Model;
+            List<DogOwnerViewModel> testDogOwnerViewModels = new List<DogOwnerViewModel>()
+            {
+                new DogOwnerViewModel(){DogNames=dogNames,OwnerName =ownerName}
+            };
+            DogOwnerListViewModel testviewModel = new DogOwnerListViewModel()
+            {
+                DogOwnerViewModels = testDogOwnerViewModels
+            };
+            mockViewModelMapper.Setup(x => x.GetAllDogOwners()).Returns(testviewModel);
 
-			// assert
-			Assert.AreEqual("Index", result.ViewName);
-			Assert.AreEqual(ownerName, resultData.DogOwnerViewModels[0].OwnerName);
-			Assert.AreEqual(dogNames, resultData.Last);
-			Assert.AreEqual(expectedContact.Email, resultData.Email);
-			//Act
-			var result = controller.Index();
-			ViewResult viewresult = _rdc.Index() as ViewResult;
+            var mockContext = new Mock<ControllerContext>();
+
+
+            var controller = new RobsDogsController(mockViewModelMapper.Object)
+            {
+                ControllerContext = mockContext.Object
+            };
+
+            // act
+            var result = controller.Index() as ViewResult;
+            var resultData = (DogOwnerListViewModel)result.ViewData.Model;
+            var resultDogOwnerViewModel = resultData.DogOwnerViewModels[0];
+
+            // assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(resultData.DogOwnerViewModels.Count, 1);
+            Assert.AreEqual(ownerName, resultDogOwnerViewModel.OwnerName, true);
+            Assert.AreEqual(dogNames, resultDogOwnerViewModel.DogNames);
 
 
 
-			//			List<DogOwner> dogOwnerList = new List<DogOwner>
-			//			{
-			//				new DogOwner
-			//				{
-			//					OwnerName = "Rob",
-			//					DogNames = new List<string>(){"Willow" , "Nook", "Sox" }
-			//				}
-			//			};
-
-
-
-
-
-
-			//			mockDogsOwnerRepo.Setup(x => x.GetAllDogOwners()).Returns(dogOwnerList);
-			//mockDogOwnerService.Setup(x => x.GetAllDogOwners()).Returns(dogOwnerList);
-
-			//			mockViewModelWrapper.Setup(x => x.GetAllDogOwners()).Returns(mockDogOwnerService.Object);
-			//			// Act
-			//			ViewResult result = _rdc.Index() as ViewResult;
-
-
-			// Assert
-			Assert.IsNotNull(result);
-			_rdc.Index();
-			
-
-			// Should be testing/verifying call to GetAllDogOwners and subsequent methods down the stack.
-			// Moq is installed to help you.
-		}
-	}
+            // Should be testing/verifying call to GetAllDogOwners and subsequent methods down the stack.
+            // Moq is installed to help you.
+        }
+    }
 }

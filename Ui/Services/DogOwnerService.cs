@@ -13,7 +13,7 @@ namespace Ui.Services
 		}
 		public List<DogOwner> GetAllDogOwners()
 		{
-			var dogOwnerRepository = new DogOwnerRepository();
+			//var dogOwnerRepository = new DogOwnerRepository();
 			var dogOwnerList = _dogOwnerRepository.GetAllDogOwners();
 
 			return dogOwnerList;
